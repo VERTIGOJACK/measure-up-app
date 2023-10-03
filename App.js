@@ -1,13 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
-import {
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { Button, StyleSheet, View, Animated } from "react-native";
 import { Accelerometer } from "expo-sensors";
 
 //ball dimensions for calc
@@ -36,7 +29,7 @@ export default function App() {
 
   useEffect(() => {
     _subscribe();
-    Accelerometer.setUpdateInterval(50);
+    Accelerometer.setUpdateInterval(100);
     return () => _unsubscribe();
   }, []);
 
@@ -52,6 +45,7 @@ export default function App() {
     setViewSize({ width, height });
   };
 
+  //on accelerometer change, calculates what position the dot should have on the screen
   useEffect(() => {
     let centerOfView = {
       x: viewSize.width / 2,
@@ -63,14 +57,16 @@ export default function App() {
     position.x =
       centerOfView.x +
       (accelerometer.x - zeroPoint.x) * centerOfView.x -
-      ballSize/2;
+      ballSize / 2;
 
     position.y =
       centerOfView.y +
-      (accelerometer.y - zeroPoint.y) * centerOfView.y -
-      ballSize/2;
+      //invert sensor y to mimic bubble behavior
+      (-accelerometer.y + zeroPoint.y) * centerOfView.y -
+      ballSize / 2;
 
     setPosition(position);
+    smooth(position);
   }, [accelerometer]);
 
   const [zeroPoint, setZeroPoint] = useState({
@@ -85,17 +81,28 @@ export default function App() {
   //state for subbing to accelerometer
   const [subscription, setSubscription] = useState(null);
 
+  //for smoothed positional updates
+  const animatedValue = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+
+  const smooth = (newPosition) => {
+    Animated.timing(animatedValue, {
+      toValue: { x: newPosition.x, y: newPosition.y },
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  };
+
   return (
     <View style={styles.container}>
-      {/* <StatusBar></StatusBar> */}
+      <StatusBar></StatusBar>
       <View style={styles.container} onLayout={handleViewSize}>
         <View style={styles.circle}></View>
-        <View
+        <Animated.View
           style={{
             ...styles.bubble,
-            left: position.x,
-            top: position.y,
-          }}></View>
+            left: animatedValue.x,
+            top: animatedValue.y,
+          }}></Animated.View>
       </View>
       <Button title="Zero" onPress={handleZeroPoint}></Button>
     </View>
