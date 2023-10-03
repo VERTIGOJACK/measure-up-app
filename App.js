@@ -45,13 +45,17 @@ export default function App() {
     y: 0,
   });
 
-  //need phone dimensions to find center
-  const windowDimensions = useWindowDimensions();
+  const [viewSize, setViewSize] = useState({ width: 0, height: 0 });
+
+  const handleViewSize = (event) => {
+    const { width, height } = event.nativeEvent.layout;
+    setViewSize({ width, height });
+  };
 
   useEffect(() => {
     let centerOfView = {
-      x: windowDimensions.width / 2,
-      y: windowDimensions.height / 2,
+      x: viewSize.width / 2,
+      y: viewSize.height / 2,
     };
 
     let position = { x: 0, y: 0 };
@@ -59,12 +63,12 @@ export default function App() {
     position.x =
       centerOfView.x +
       (accelerometer.x - zeroPoint.x) * centerOfView.x -
-      ballSize;
+      ballSize/2;
 
     position.y =
       centerOfView.y +
       (accelerometer.y - zeroPoint.y) * centerOfView.y -
-      ballSize;
+      ballSize/2;
 
     setPosition(position);
   }, [accelerometer]);
@@ -78,15 +82,13 @@ export default function App() {
     setZeroPoint(accelerometer);
   };
 
-  const [viewSize, setViewSize] = useState({ width: 0, height: 0 });
-
   //state for subbing to accelerometer
   const [subscription, setSubscription] = useState(null);
 
   return (
     <View style={styles.container}>
       {/* <StatusBar></StatusBar> */}
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={handleViewSize}>
         <View style={styles.circle}></View>
         <View
           style={{
