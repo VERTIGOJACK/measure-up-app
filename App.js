@@ -2,9 +2,10 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useRef } from "react";
 import { Button, StyleSheet, View, Animated } from "react-native";
 import { Accelerometer } from "expo-sensors";
+import Bubble from "./Bubble";
 
 //ball dimensions for calc
-const ballSize = 30;
+const ballSize = 40;
 
 export default function App() {
   // deconstructs x and y from input
@@ -74,8 +75,14 @@ export default function App() {
     y: 0,
   });
 
+  //setting and removing zero point
+
   const handleZeroPoint = () => {
     setZeroPoint(accelerometer);
+  };
+
+  const handleClear = () => {
+    setZeroPoint({ x: 0, y: 0 });
   };
 
   //state for subbing to accelerometer
@@ -87,7 +94,7 @@ export default function App() {
   const smooth = (newPosition) => {
     Animated.timing(animatedValue, {
       toValue: { x: newPosition.x, y: newPosition.y },
-      duration: 200,
+      duration: 150,
       useNativeDriver: false,
     }).start();
   };
@@ -102,9 +109,14 @@ export default function App() {
             ...styles.bubble,
             left: animatedValue.x,
             top: animatedValue.y,
-          }}></Animated.View>
+          }}>
+          <Bubble></Bubble>
+        </Animated.View>
       </View>
-      <Button title="Zero" onPress={handleZeroPoint}></Button>
+      <View style={styles.buttonsContainer}>
+        <Button title="Set Zero Point" onPress={handleZeroPoint}></Button>
+        <Button title="Clear " onPress={handleClear}></Button>
+      </View>
     </View>
   );
 }
@@ -119,12 +131,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  buttonsContainer: {
+    flexDirection: "row",
+    width: "100%",
+    paddingVertical: 20,
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
   bubble: {
     position: "absolute",
     width: ballSize,
     height: ballSize,
-    backgroundColor: "red",
-    borderRadius: 100,
   },
   circle: {
     position: "relative",
