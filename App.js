@@ -36,6 +36,7 @@ export default function App() {
           name="Home"
           component={Home}
           options={{
+            headerShown: false,
             tabBarLabel: "",
             tabBarIcon: ({ color, size }) => (
               <HomeSVG color={color} size={size} />
@@ -47,6 +48,7 @@ export default function App() {
           name="Measure"
           component={Measure}
           options={{
+            headerShown: false,
             tabBarLabel: "",
             tabBarIcon: ({ color, size }) => (
               <RulerSVG color={color} size={size} />
@@ -58,6 +60,7 @@ export default function App() {
           name="Level"
           component={Level}
           options={{
+            headerShown: false,
             tabBarLabel: "",
             tabBarIcon: ({ color, size }) => (
               <LevelSVG color={color} size={size} />

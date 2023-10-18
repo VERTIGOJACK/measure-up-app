@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, SyntheticEvent } from "react";
 import { Button, StyleSheet, View, Animated } from "react-native";
 import { Accelerometer } from "expo-sensors";
 import Bubble from "./components/bubble.jsx";
 import Background from "../../components/background/background.jsx";
+import color from "../../styles/color.js";
+// import { LinearGradient } from "expo-linear-gradient";
 
 //ball dimensions for calc
-const ballSize = 40;
+const ballSize = 80;
+const halfBallsize = ballSize / 2;
 
 export default function Screen() {
   // deconstructs x and y from input
@@ -57,14 +60,42 @@ export default function Screen() {
 
     position.x =
       centerOfView.x +
-      (accelerometer.x - zeroPoint.x) * centerOfView.x -
-      ballSize / 2;
+      (accelerometer.x - zeroPoint.x) * (centerOfView.x - halfBallsize);
 
     position.y =
       centerOfView.y +
       //invert sensor y to mimic bubble behavior
-      (-accelerometer.y + zeroPoint.y) * centerOfView.y -
-      ballSize / 2;
+      (-accelerometer.y + zeroPoint.y) * (centerOfView.y - halfBallsize);
+
+    //pythagoras
+    const distance = Math.sqrt(
+      Math.pow(centerOfView.x - position.x, 2) +
+        Math.pow(centerOfView.y - position.y, 2)
+    );
+
+    // console.log(`ball position: X ${position.x} Y ${position.y}`);
+    // console.log(
+    //   `ball diff from middle: X ${position.x - centerOfView.x} Y ${
+    //     position.y - centerOfView.y
+    //   }`
+    // );
+
+    if (distance > centerOfView.x) {
+      const scalingFactor = centerOfView.x / distance;
+      // Calculate the new position that respects the allowed distance
+      const newX =
+        centerOfView.x + (position.x - centerOfView.x) * scalingFactor;
+      const newY =
+        centerOfView.y + (position.y - centerOfView.y) * scalingFactor;
+
+      // Update the ball's position
+      position.x = newX;
+      position.y = newY;
+    }
+
+    //By applying this logic, the ball will always stay within the allowed distance (x)
+    //from the center while having free movement within the grid.
+    //If the ball exceeds this distance, it will be repositioned to maintain the desired constraint.
 
     setPosition(position);
     smooth(position);
@@ -101,16 +132,25 @@ export default function Screen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container} onLayout={handleViewSize}>
-        <View style={styles.circle}></View>
-        <Animated.View
-          style={{
-            ...styles.bubble,
-            left: animatedValue.x,
-            top: animatedValue.y,
-          }}>
-          <Bubble></Bubble>
-        </Animated.View>
+      {/* add containing container her so that flex can be used */}
+      <View style={styles.outerContainer}>
+        <View style={styles.levelContainer} onLayout={handleViewSize}>
+          <View style={styles.level}></View>
+          <View style={styles.circle}></View>
+          {/* <LinearGradient
+          // Background Linear Gradient
+          colors={["rgba(0,0,0,0.8)", "transparent"]}
+          style={styles.background}
+        /> */}
+          <Animated.View
+            style={{
+              ...styles.bubble,
+              left: animatedValue.x,
+              top: animatedValue.y,
+            }}>
+            <Bubble></Bubble>
+          </Animated.View>
+        </View>
       </View>
       <View style={styles.buttonsContainer}>
         <Button title="Set Zero Point" onPress={handleZeroPoint}></Button>
@@ -123,17 +163,24 @@ export default function Screen() {
 
 const styles = StyleSheet.create({
   container: {
+    display: "flex",
     flexDirection: "column",
     width: "100%",
     height: "100%",
-    flex: 1,
     paddingHorizontal: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  outerContainer: {
+    display: "flex",
+    flex: 10,
     justifyContent: "center",
     alignItems: "center",
   },
   buttonsContainer: {
     flexDirection: "row",
     width: "100%",
+    flex: 1,
     paddingVertical: 20,
     justifyContent: "space-around",
     alignItems: "center",
@@ -142,14 +189,39 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: ballSize,
     height: ballSize,
+    transform: [{ translateX: -halfBallsize }, { translateY: -halfBallsize }],
+    zIndex: -3,
+  },
+  level: {
+    position: "absolute",
+    width: "100%",
+    height: "100",
+    borderWidth: 20,
+    aspectRatio: "1/1",
+    borderStyle: "solid",
+    borderColor: color.utility.trueWhite,
+    borderRadius: 2000,
+    elevation: 5,
+  },
+  levelContainer: {
+    flexDirection: "column",
+    width: "100%",
+    height: "100",
+    aspectRatio: "1/1",
+
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 2000,
+    backgroundColor: color.palette.darkGreen,
   },
   circle: {
-    position: "relative",
-    width: 50,
-    height: 50,
-    borderWidth: 5,
+    position: "absolute",
+    width: 100,
+    height: 100,
+    borderWidth: 10,
     borderStyle: "solid",
-    borderColor: "red",
+    borderColor: color.palette.lightBrown,
     borderRadius: 100,
+    elevation: 5,
   },
 });
