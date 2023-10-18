@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Button, StyleSheet, View, Text, Animated } from "react-native";
 
 export default function Screen() {
-  return <View style={styles.container}></View>;
+  return (
+    <View style={styles.container}>
+      <Text>Hello from furniture</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

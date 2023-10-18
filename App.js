@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import Home from "./screens/home/home";
 import Measure from "./screens/measure/measure";
@@ -14,13 +14,20 @@ import color from "./styles/color";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+import { SQLiteService } from "./database/SQLiteService";
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  useEffect(() => {
+    const dbService = new SQLiteService();
+    dbService.getItemsFromCategory("Furniture");
+  }, []);
+
   return (
     <NavigationContainer>
+      <StatusBar></StatusBar>
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{
