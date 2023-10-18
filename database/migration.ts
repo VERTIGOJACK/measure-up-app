@@ -98,6 +98,13 @@ const DummyData = (tx: SQLite.SQLTransaction) => {
         NULL
     ),
     (
+      NULL,
+      NULL,
+      'Furniture',
+      'A third table',
+      NULL
+    ),
+    (
         NULL,
         NULL,
         'Furniture',

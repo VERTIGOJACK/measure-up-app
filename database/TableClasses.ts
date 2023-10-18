@@ -12,7 +12,7 @@ export class dbRoom {
     this.Image_ID = { value: -1, key: "Image_ID" };
   }
   FromRow(row: any) {
-    this.ID.value = row.Id;
+    this.ID.value = row.ID;
     this.Name.value = row.Name;
     this.Image_ID.value = row.Image_ID;
   }
@@ -36,7 +36,7 @@ export class dbItem {
     this.Image_ID = { value: -1, key: "Image_ID" };
   }
   FromRow(row: any) {
-    this.ID.value = row.Id;
+    this.ID.value = row.ID;
     this.Name.value = row.Name;
     this.Category.value = row.Category;
     this.Room_ID.value = row.Room_ID;
@@ -62,7 +62,7 @@ export class dbMeasurement {
     this.Item_ID = { value: -1, key: "Item_ID" };
   }
   FromRow(row: any) {
-    this.ID.value = row.Id;
+    this.ID.value = row.ID;
     this.Name.value = row.Name;
     this.Amount.value = row.Amount;
     this.Unit.value = row.Unit;
@@ -84,7 +84,7 @@ export class dbImage {
     this.Data = { value: [], key: "Data" };
   }
   FromRow(row: any) {
-    this.ID.value = row.Id;
+    this.ID.value = row.ID;
     this.Filetype.value = row.Filetype;
     this.Data.value = row.Data;
   }

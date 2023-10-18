@@ -16,14 +16,26 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { SQLiteService } from "./database/SQLiteService";
+import { useDatabase, DatabaseProvider } from "./database/DbContext";
+
+export default function App() {
+  return (
+    <DatabaseProvider>
+      <MainApp></MainApp>
+    </DatabaseProvider>
+  );
+}
 
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+function MainApp() {
+  const db = useDatabase();
+
   useEffect(() => {
-    const dbService = new SQLiteService();
-    dbService.getItemsFromCategory("Furniture");
-  }, []);
+    if (db) {
+      db.applyMigration();
+    }
+  }, [db]);
 
   return (
     <NavigationContainer>
