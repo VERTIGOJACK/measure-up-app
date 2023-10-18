@@ -15,6 +15,11 @@ import displayItem from "../../components/displayItem";
 export default function Screen() {
   const db = useDatabase();
   const [data, setData] = useState<dbItem[] | null>(null);
+  const [rerender, setRerender] = useState(false);
+
+  const TriggerRerender = () => {
+    setRerender(!rerender);
+  };
 
   const fetchData = async () => {
     try {
@@ -43,15 +48,8 @@ export default function Screen() {
 
   useFocusEffect(
     useCallback(() => {
-      let isMounted = true; // A flag to check if the component is still mounted
-      if (isMounted) {
-        fetchData(); // Execute the async function
-        createItem();
-      }
-      return () => {
-        // Cleanup function, will be called when the component unmounts
-        isMounted = false;
-      };
+      fetchData(); // Execute the async function
+      createItem(); // create item
     }, [])
   );
 
