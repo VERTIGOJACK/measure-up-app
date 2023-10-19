@@ -57,6 +57,7 @@ export class SQLiteService {
   }
 
   async getItemsFromCategory(category: string): Promise<dbItem[]> {
+    
     return new Promise((resolve, reject) => {
       const item = new dbItem();
       const ItemArray: dbItem[] = [];

@@ -1,3 +1,5 @@
+import React from "react";
+import { Image } from "expo-image";
 import { StyleSheet, View, Text } from "react-native";
 import { dbItem } from "../../../database/TableClasses";
 
@@ -6,6 +8,7 @@ export default function Component(props: any) {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
+        <Image source={require("./placeholder.png")} style={styles.image} />
         <Text>{item.Name.value}</Text>
         <Text>{item.ID.value}</Text>
       </View>
@@ -28,5 +31,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderWidth: 1,
+  },
+  image: {
+    height: 50,
+    width: "100%",
+    flex: 1,
   },
 });

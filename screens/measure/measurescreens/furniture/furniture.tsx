@@ -39,7 +39,18 @@ export default function Screen() {
       const newItem = new dbItem();
       newItem.Category.value = "Furniture";
       newItem.Name.value = "A new name for my item";
-      await db.ItemManager.createItem(newItem);
+      await db?.ItemManager.createItem(newItem);
+    } catch (error) {
+      // Handle any errors here
+      console.error(error);
+    }
+  };
+
+  const deleteItem = async () => {
+    try {
+      const newItem = new dbItem();
+      newItem.ID.value = 1;
+      await db?.ItemManager.deleteItemFromId(newItem.ID.value);
     } catch (error) {
       // Handle any errors here
       console.error(error);
@@ -50,6 +61,7 @@ export default function Screen() {
     useCallback(() => {
       fetchData(); // Execute the async function
       createItem(); // create item
+      deleteItem(); // delete item
     }, [])
   );
 
@@ -62,7 +74,8 @@ export default function Screen() {
           return item.ID.value.toString();
         }}
         horizontal={false}
-        numColumns={2}></FlatList>
+        numColumns={2}
+      ></FlatList>
     </View>
   );
 }
