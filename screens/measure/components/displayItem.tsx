@@ -1,17 +1,33 @@
 import React from "react";
 import { Image } from "expo-image";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { dbItem } from "../../../database/TableClasses";
+import color from "../../../styles/color";
+import DeleteButton from "../../../components/buttons/deletebutton";
+import Placeholder from "../../../assets/placeholder.png";
 
 export default function Component(props: any) {
   const item: dbItem = props.item;
+
+  const handleDelete = () => {
+    props.onDeletePress();
+  };
+
+  const handleSelect = () => {
+    props.onSelectPress();
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Image source={require("./placeholder.png")} style={styles.image} />
-        <Text>{item.Name.value}</Text>
-        <Text>{item.ID.value}</Text>
-      </View>
+      <TouchableOpacity style={styles.button} onPress={handleDelete}>
+        <DeleteButton></DeleteButton>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.innerContainer} onPress={handleSelect}>
+        <Image source={Placeholder} style={styles.image} />
+        <View style={styles.text}>
+          <Text style={styles.font}>{item.Name.value}</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -20,9 +36,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     width: "50%",
-    height: 300,
+    height: 250,
     padding: 5,
-    borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -30,11 +45,32 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: "100%",
     height: "100%",
-    borderWidth: 1,
+    borderRadius: 10,
+    padding: 5,
+    backgroundColor: color.utility.trueWhite,
+    elevation: 10,
   },
   image: {
-    height: 50,
+    width: "100%",
+    flex: 3,
+    borderRadius: 10,
+  },
+  text: {
+    justifyContent: "center",
+    alignItems: "center",
     width: "100%",
     flex: 1,
+  },
+  font: {
+    fontFamily: "Roboto",
+    fontWeight: "700",
+    fontSize: 20,
+  },
+  button: {
+    position: "absolute",
+    height: 50,
+    right: 0,
+    top: 0,
+    zIndex: 1,
   },
 });

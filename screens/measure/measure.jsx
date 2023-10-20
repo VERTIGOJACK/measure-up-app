@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button, StyleSheet, View, Text, Animated } from "react-native";
 
-
-import Furniture from "./measurescreens/furniture/furniture";
+import Furniture from "./measurescreens/furniture/furnitureHolder";
 import Other from "./measurescreens/other/other";
 import Rooms from "./measurescreens/rooms/rooms";
 
 //change these
-import FurnitureSVG from "../../assets/Furniture";
-import RoomsSVG from "../../assets/Rooms";
-import OtherSVG from "../../assets/Other";
+import FurnitureSVG from "../../assets/tab-icons/Furniture";
+import RoomsSVG from "../../assets/tab-icons/Rooms";
+import OtherSVG from "../../assets/tab-icons/Other";
 
 import color from "../../styles/color";
 
@@ -20,7 +19,7 @@ const Tab = createBottomTabNavigator();
 export default function Screen() {
   return (
     <Tab.Navigator
-      initialRouteName="Furniture"
+      initialRouteName="FurnitureNavigator"
       screenOptions={{
         tabBarActiveTintColor: color.palette.lightGreen,
         tabBarStyle: {
@@ -31,7 +30,7 @@ export default function Screen() {
         },
       }}>
       <Tab.Screen
-        name="Furniture"
+        name="FurnitureNavigator"
         component={Furniture}
         options={{
           headerShown: false,
@@ -43,7 +42,7 @@ export default function Screen() {
         }}
       />
       <Tab.Screen
-        name="Rooms"
+        name="RoomsNavigator"
         component={Rooms}
         options={{
           headerShown: false,
@@ -55,7 +54,7 @@ export default function Screen() {
         }}
       />
       <Tab.Screen
-        name="Other"
+        name="OtherNavigator"
         component={Other}
         options={{
           headerShown: false,

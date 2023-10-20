@@ -6,11 +6,12 @@ import {
   Text,
   Animated,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useDatabase } from "../../../../database/DbContext";
 import { dbItem } from "../../../../database/TableClasses";
-import displayItem from "../../components/displayItem";
+import AddButton from "../../../../components/buttons/addbutton";
 
 export default function Screen() {
   const db = useDatabase();
@@ -19,6 +20,7 @@ export default function Screen() {
 
   const TriggerRerender = () => {
     setRerender(!rerender);
+    console.log(rerender);
   };
 
   const fetchData = async () => {
@@ -40,17 +42,17 @@ export default function Screen() {
       newItem.Category.value = "Furniture";
       newItem.Name.value = "A new name for my item";
       await db?.ItemManager.createItem(newItem);
+      TriggerRerender();
     } catch (error) {
       // Handle any errors here
       console.error(error);
     }
   };
 
-  const deleteItem = async () => {
+  const deleteItem = async (id: number) => {
     try {
-      const newItem = new dbItem();
-      newItem.ID.value = 1;
-      await db?.ItemManager.deleteItemFromId(newItem.ID.value);
+      await db?.ItemManager.deleteItemFromId(id);
+      TriggerRerender();
     } catch (error) {
       // Handle any errors here
       console.error(error);
@@ -60,22 +62,29 @@ export default function Screen() {
   useFocusEffect(
     useCallback(() => {
       fetchData(); // Execute the async function
-      createItem(); // create item
-      deleteItem(); // delete item
-    }, [])
+    }, [rerender])
   );
 
   return (
     <View style={styles.container}>
+      {/* <DisplayItem item={data ? data[0] : new dbItem()}></DisplayItem> */}
       <FlatList
         data={data}
-        renderItem={displayItem}
+        renderItem={({ item }) => (
+          <DisplayItem
+            item={item}
+            onDeletePress={async () => {
+              deleteItem(item.ID.value);
+            }}></DisplayItem>
+        )}
         keyExtractor={(item) => {
           return item.ID.value.toString();
         }}
         horizontal={false}
-        numColumns={2}
-      ></FlatList>
+        numColumns={2}></FlatList>
+      <TouchableOpacity style={styles.addContainer} onPress={createItem}>
+        <AddButton></AddButton>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -86,9 +95,16 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     flex: 1,
-    paddingHorizontal: 20,
+    paddingTop: 20,
     paddingVertical: 20,
     justifyContent: "center",
     alignItems: "center",
+  },
+  addContainer: {
+    position: "absolute",
+    bottom: 0,
+    height: 80,
+    padding: 10,
+    width: "auto",
   },
 });

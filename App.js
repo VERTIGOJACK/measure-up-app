@@ -1,14 +1,17 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
+
+import React, { useState, useEffect, useCallback } from "react";
+import { StyleSheet, LogBox, View, useWindowDimensions } from "react-native";
+
+LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
 
 import Home from "./screens/home/home";
 import Measure from "./screens/measure/measure";
 import Level from "./screens/level/level";
 
-import RulerSVG from "./assets/Ruler";
-import LevelSVG from "./assets/Level";
-import HomeSVG from "./assets/Home";
+import RulerSVG from "./assets/tab-icons/Ruler";
+import LevelSVG from "./assets/tab-icons/Level";
+import HomeSVG from "./assets/tab-icons/Home";
 
 import color from "./styles/color";
 
@@ -37,62 +40,70 @@ function MainApp() {
     }
   }, [db]);
 
+  const windowHeight = useWindowDimensions().height;
+
   return (
-    <NavigationContainer>
-      <StatusBar></StatusBar>
-      <Tab.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          tabBarActiveTintColor: color.palette.lightGreen,
-          tabBarStyle: {
-            height: 80,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        }}>
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            headerShown: false,
-            tabBarLabel: "",
-            tabBarIcon: ({ color, size }) => (
-              <HomeSVG color={color} size={size} />
-            ),
-            tabBarItemStyle: styles.option,
-          }}
-        />
-        <Tab.Screen
-          name="Measure"
-          component={Measure}
-          options={{
-            headerShown: false,
-            tabBarLabel: "",
-            tabBarIcon: ({ color, size }) => (
-              <RulerSVG color={color} size={size} />
-            ),
-            tabBarItemStyle: styles.option,
-          }}
-        />
-        <Tab.Screen
-          name="Level"
-          component={Level}
-          options={{
-            headerShown: false,
-            tabBarLabel: "",
-            tabBarIcon: ({ color, size }) => (
-              <LevelSVG color={color} size={size} />
-            ),
-            tabBarItemStyle: styles.lastOption,
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <View style={{ ...styles.rootview, minHeight: Math.round(windowHeight) }}>
+      <NavigationContainer>
+        <StatusBar></StatusBar>
+        <Tab.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            tabBarActiveTintColor: color.palette.lightGreen,
+            tabBarStyle: {
+              height: 80,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          }}>
+          <Tab.Screen
+            name="Home"
+            component={Home}
+            options={{
+              headerShown: false,
+              tabBarLabel: "",
+              tabBarIcon: ({ color, size }) => (
+                <HomeSVG color={color} size={size} />
+              ),
+              tabBarItemStyle: styles.option,
+            }}
+          />
+          <Tab.Screen
+            name="Measure"
+            component={Measure}
+            options={{
+              headerShown: false,
+              tabBarLabel: "",
+              tabBarIcon: ({ color, size }) => (
+                <RulerSVG color={color} size={size} />
+              ),
+              tabBarItemStyle: styles.option,
+            }}
+          />
+          <Tab.Screen
+            name="Level"
+            component={Level}
+            options={{
+              headerShown: false,
+              tabBarLabel: "",
+              tabBarIcon: ({ color, size }) => (
+                <LevelSVG color={color} size={size} />
+              ),
+              tabBarItemStyle: styles.lastOption,
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  rootview: {
+    width: "100%",
+    height: "100%",
+  },
   container: {
     flexDirection: "column",
     width: "100%",
