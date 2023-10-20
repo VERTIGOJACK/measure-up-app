@@ -2,6 +2,7 @@ import * as SQLite from "expo-sqlite";
 import migration from "./migration";
 import { dbRoom, dbImage, dbItem, dbMeasurement } from "./TableClasses";
 import { ItemManager } from "./Managers/ItemManager";
+import { ImageManager } from "./Managers/ImageManager";
 
 export class SQLiteService {
   //prop
@@ -10,7 +11,7 @@ export class SQLiteService {
   ItemManager: ItemManager;
   RoomManager;
   MeasurementManager;
-  ImageManager;
+  ImageManager: ImageManager;
 
   private getConnection = () => {
     return SQLite.openDatabase("Measureup.db");
@@ -19,7 +20,8 @@ export class SQLiteService {
   //constructor
   constructor() {
     this.db = this.getConnection();
-    this.ItemManager = new ItemManager(this.db);  
+    this.ItemManager = new ItemManager(this.db);
+    this.ImageManager = new ImageManager(this.db);
   }
 
   applyMigration() {
@@ -57,7 +59,6 @@ export class SQLiteService {
   }
 
   async getItemsFromCategory(category: string): Promise<dbItem[]> {
-    
     return new Promise((resolve, reject) => {
       const item = new dbItem();
       const ItemArray: dbItem[] = [];

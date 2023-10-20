@@ -12,13 +12,18 @@ import {
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useDatabase } from "../../../../../database/DbContext";
-import { dbItem } from "../../../../../database/TableClasses";
+import { dbImage, dbItem } from "../../../../../database/TableClasses";
 import AddButton from "../../../../../components/buttons/addbutton";
 import Background from "../../../../../components/background/background";
 import color from "../../../../../styles/color";
 import Placeholder from "../../../../../assets/placeholder.png";
 import CameraButton from "../../../../../components/buttons/camerabutton";
 import DoneButton from "../../../../../components/buttons/donebutton";
+import {
+  dbImageToBase64,
+  UriToByteArray,
+} from "../../../../../helpers/Convert";
+import * as ImagePicker from "expo-image-picker";
 
 export default function Screen(props: any) {
   const category = props.route.params.category;
@@ -27,9 +32,26 @@ export default function Screen(props: any) {
   const db = useDatabase();
 
   const [name, setName] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("");
 
   const [rerender, setRerender] = useState(false);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      cameraType: ImagePicker.CameraType.back,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const TriggerRerender = () => {
     setRerender(!rerender);
@@ -38,10 +60,31 @@ export default function Screen(props: any) {
 
   const createItem = async () => {
     try {
+      const newImage = new dbImage();
+      //create bytearray
+      newImage.Data.value = await UriToByteArray(image);
+      //get filetype
+      const filetype = image.split(".").pop();
+      newImage.Filetype.value = filetype != null ? filetype : "";
+      //upload
+      const imageId = await db?.ImageManager.createImage(newImage);
+
       const newItem = new dbItem();
       newItem.Category.value = category;
-      newItem.Name.value = "A new name for my item";
+      newItem.Name.value = name;
+      newItem.Image_ID.value = imageId != null ? imageId : -1;
       await db?.ItemManager.createItem(newItem);
+      navigator.goBack();
+    } catch (error) {
+      // Handle any errors here
+      console.error(error);
+    }
+  };
+
+  const createImage = async () => {
+    try {
+      const newImage = new dbImage();
+      // await db?.imageManager.createItem(newItem);
       TriggerRerender();
     } catch (error) {
       // Handle any errors here
@@ -52,6 +95,8 @@ export default function Screen(props: any) {
   useFocusEffect(
     useCallback(() => {
       console.log(category);
+      console.log(Placeholder);
+      console.log(image);
     }, [rerender])
   );
 
@@ -60,15 +105,19 @@ export default function Screen(props: any) {
       <View style={styles.innerContainer}>
         <Image
           style={styles.image}
-          source={image == null ? Placeholder : image}></Image>
+          source={image == "" ? Placeholder : image}></Image>
         <View style={styles.cameraView}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={pickImage}>
             <CameraButton></CameraButton>
           </TouchableOpacity>
         </View>
         <View style={styles.inputView}>
-          <TextInput style={styles.textInput} placeholder="Name"></TextInput>
-          <TouchableOpacity>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Name"
+            value={name}
+            onChangeText={(text) => setName(text)}></TextInput>
+          <TouchableOpacity onPress={createItem}>
             <DoneButton></DoneButton>
           </TouchableOpacity>
         </View>
