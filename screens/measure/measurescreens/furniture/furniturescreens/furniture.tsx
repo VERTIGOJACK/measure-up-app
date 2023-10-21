@@ -15,7 +15,7 @@ import DisplayItem from "../../../components/displayItem";
 import AddButton from "../../../../../components/buttons/addbutton";
 import Background from "../../../../../components/background/background";
 
-export default function Screen(props) {
+export default function Screen(props: any) {
   const navigator = props.navigation;
 
   const db = useDatabase();
