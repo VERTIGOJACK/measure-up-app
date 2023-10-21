@@ -1,10 +1,11 @@
 import React from "react";
 import { Image } from "expo-image";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { dbItem } from "../../../database/TableClasses";
+import { dbImage, dbItem } from "../../../database/TableClasses";
 import color from "../../../styles/color";
 import DeleteButton from "../../../components/buttons/deletebutton";
 import Placeholder from "../../../assets/placeholder.png";
+import { dbImageToBase64 } from "../../../helpers/Convert";
 
 export default function Component(props: any) {
   const item: dbItem = props.item;
@@ -16,6 +17,12 @@ export default function Component(props: any) {
   const handleSelect = () => {
     props.onSelectPress();
   };
+////ahhhhhh its not importing the image anyehreweewewewew
+  const ImageOrPlaceHolder = (item : dbItem) => {
+    if (item. != "") {
+      return dbImageToBase64(image);
+    } else return Placeholder;
+  };
 
   return (
     <View style={styles.container}>
@@ -23,7 +30,7 @@ export default function Component(props: any) {
         <DeleteButton></DeleteButton>
       </TouchableOpacity>
       <TouchableOpacity style={styles.innerContainer} onPress={handleSelect}>
-        <Image source={Placeholder} style={styles.image} />
+        <Image source={ImageOrPlaceHolder(item)} style={styles.image} />
         <View style={styles.text}>
           <Text style={styles.font}>{item.Name.value}</Text>
         </View>

@@ -50,15 +50,14 @@ export class ImageManager {
           try {
             const result = await new Promise<number>((resolveTx, rejectTx) => {
               tx.executeSql(
-                `INSERT INTO ${image.table} (ID,Filetype,Data)
+                `INSERT INTO ${image.table} (${image.ID.key},${image.Filetype.key},${image.Data.key})
                 VALUES (
                     NULL,
                     ?,
-                    ?,
+                    ?
                 );`,
-                [image.Filetype.value, image.Data.value.toString()],
+                [image.Filetype.value, image.Data.value],
                 (tx, resultSet) => {
-                  console.log(resultSet.insertId);
                   const number: number =
                     resultSet.insertId != null ? resultSet.insertId : -1;
                   resolveTx(number);

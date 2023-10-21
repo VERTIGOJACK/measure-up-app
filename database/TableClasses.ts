@@ -75,13 +75,13 @@ export class dbImage {
   //props
   ID: { value: number; key: string };
   Filetype: { value: string; key: string };
-  Data: { value: Uint8Array; key: string };
+  Data: { value: string; key: string };
   ///////////////////////
   constructor() {
     this.table = "Image";
     this.ID = { value: -1, key: "ID" };
     this.Filetype = { value: "", key: "Filetype" };
-    this.Data = { value: new Uint8Array(), key: "Data" };
+    this.Data = { value: "", key: "Data" };
   }
   FromRow(row: any) {
     this.ID.value = row.ID;

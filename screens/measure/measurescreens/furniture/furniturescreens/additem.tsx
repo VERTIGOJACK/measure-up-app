@@ -21,6 +21,7 @@ import CameraButton from "../../../../../components/buttons/camerabutton";
 import DoneButton from "../../../../../components/buttons/donebutton";
 import {
   dbImageToBase64,
+  UriToBase64,
   UriToByteArray,
 } from "../../../../../helpers/Convert";
 import * as ImagePicker from "expo-image-picker";
@@ -61,14 +62,14 @@ export default function Screen(props: any) {
   const createItem = async () => {
     try {
       const newImage = new dbImage();
-      //create bytearray
-      newImage.Data.value = await UriToByteArray(image);
+      //create base64
+      newImage.Data.value = await UriToBase64(image);
       //get filetype
       const filetype = image.split(".").pop();
       newImage.Filetype.value = filetype != null ? filetype : "";
       //upload
       const imageId = await db?.ImageManager.createImage(newImage);
-
+      console.log(imageId);
       const newItem = new dbItem();
       newItem.Category.value = category;
       newItem.Name.value = name;
@@ -105,7 +106,8 @@ export default function Screen(props: any) {
       <View style={styles.innerContainer}>
         <Image
           style={styles.image}
-          source={image == "" ? Placeholder : image}></Image>
+          source={image == "" ? Placeholder : image}
+        ></Image>
         <View style={styles.cameraView}>
           <TouchableOpacity onPress={pickImage}>
             <CameraButton></CameraButton>
@@ -116,8 +118,13 @@ export default function Screen(props: any) {
             style={styles.textInput}
             placeholder="Name"
             value={name}
-            onChangeText={(text) => setName(text)}></TextInput>
-          <TouchableOpacity onPress={createItem}>
+            onChangeText={(text) => setName(text)}
+          ></TextInput>
+          <TouchableOpacity
+            onPress={async () => {
+              createItem();
+            }}
+          >
             <DoneButton></DoneButton>
           </TouchableOpacity>
         </View>
