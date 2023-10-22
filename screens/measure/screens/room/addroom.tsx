@@ -11,20 +11,18 @@ import {
   TextInput,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { useDatabase } from "../../../database/DbContext";
-import { dbImage, dbItem } from "../../../database/TableClasses";
-import Background from "../../../components/background/background";
-import color from "../../../styles/color";
-import Placeholder from "../../../assets/placeholder-base64.js";
-import CameraButton from "../../../components/buttons/camerabutton";
-import DoneButton from "../../../components/buttons/donebutton";
-import { dbImageToBase64 } from "../../../helpers/Convert";
+import { useDatabase } from "../../../../database/DbContext";
+import { dbImage, dbItem, dbRoom } from "../../../../database/TableClasses";
+import Background from "../../../../components/background/background";
+import color from "../../../../styles/color";
+import Placeholder from "../../../../assets/placeholder-base64.js";
+import CameraButton from "../../../../components/buttons/camerabutton";
+import DoneButton from "../../../../components/buttons/donebutton";
+import { dbImageToBase64 } from "../../../../helpers/Convert";
 import * as ImagePicker from "expo-image-picker";
 
 export default function Screen(props: any) {
-  const category = props.route.params.category;
   const navigator = props.navigation;
-  
 
   const db = useDatabase();
 
@@ -48,20 +46,18 @@ export default function Screen(props: any) {
     }
   };
 
-  const createItem = async () => {
+  const createRoom = async () => {
     try {
       //image
       const imageId = await createImage();
       //item
-      const newItem = new dbItem();
+      const newRoom = new dbRoom();
       //assign imageID
-      newItem.Image_ID.value = imageId != null ? imageId : -1;
-      //get category from state
-      newItem.Category.value = category;
-      //get name from state
-      newItem.Name.value = name;
+      newRoom.Image_ID.value = imageId != null ? imageId : -1;
+      //assign name
+      newRoom.Name.value = name;
       //write to database
-      await db?.ItemManager.createItem(newItem);
+      await db?.RoomManager.createRoom(newRoom);
       //navigate
       navigator.goBack();
     } catch (error) {
@@ -93,8 +89,7 @@ export default function Screen(props: any) {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(category);
-      navigator.setOptions({ title: `Add item to category: ${category}` });
+      navigator.setOptions({ title: `Add new Room` });
     }, [])
   );
 
@@ -119,7 +114,7 @@ export default function Screen(props: any) {
             onChangeText={(text) => setName(text)}></TextInput>
           <TouchableOpacity
             onPress={async () => {
-              createItem();
+              createRoom();
             }}>
             <DoneButton></DoneButton>
           </TouchableOpacity>

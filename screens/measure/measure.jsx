@@ -3,7 +3,7 @@ import { Button, StyleSheet, View, Text, Animated } from "react-native";
 
 import Furniture from "./screens/furnitureHolder";
 import Other from "./screens/otherHolder";
-import Rooms from "./measurescreens/rooms/rooms";
+import Rooms from "./screens/roomHolder";
 
 //change these
 import FurnitureSVG from "../../assets/tab-icons/Furniture";

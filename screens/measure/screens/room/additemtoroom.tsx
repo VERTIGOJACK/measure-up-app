@@ -11,20 +11,19 @@ import {
   TextInput,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { useDatabase } from "../../../database/DbContext";
-import { dbImage, dbItem } from "../../../database/TableClasses";
-import Background from "../../../components/background/background";
-import color from "../../../styles/color";
-import Placeholder from "../../../assets/placeholder-base64.js";
-import CameraButton from "../../../components/buttons/camerabutton";
-import DoneButton from "../../../components/buttons/donebutton";
-import { dbImageToBase64 } from "../../../helpers/Convert";
+import { useDatabase } from "../../../../database/DbContext";
+import { dbImage, dbItem, dbRoom } from "../../../../database/TableClasses";
+import Background from "../../../../components/background/background";
+import color from "../../../../styles/color";
+import Placeholder from "../../../../assets/placeholder-base64.js";
+import CameraButton from "../../../../components/buttons/camerabutton";
+import DoneButton from "../../../../components/buttons/donebutton";
+import { dbImageToBase64 } from "../../../../helpers/Convert";
 import * as ImagePicker from "expo-image-picker";
 
 export default function Screen(props: any) {
-  const category = props.route.params.category;
+  const room: dbRoom = props.route.params.room;
   const navigator = props.navigation;
-  
 
   const db = useDatabase();
 
@@ -57,7 +56,7 @@ export default function Screen(props: any) {
       //assign imageID
       newItem.Image_ID.value = imageId != null ? imageId : -1;
       //get category from state
-      newItem.Category.value = category;
+      newItem.Room_ID.value = room.ID.value;
       //get name from state
       newItem.Name.value = name;
       //write to database
@@ -93,8 +92,7 @@ export default function Screen(props: any) {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(category);
-      navigator.setOptions({ title: `Add item to category: ${category}` });
+      navigator.setOptions({ title: `Add item to room: ${room.Name.value}` });
     }, [])
   );
 
