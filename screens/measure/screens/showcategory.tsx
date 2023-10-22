@@ -8,12 +8,17 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { useDatabase } from "../../../../database/DbContext";
-import { dbItem } from "../../../../database/TableClasses";
-import AddButton from "../../../../components/buttons/addbutton";
+import { NavigationContext, useFocusEffect } from "@react-navigation/native";
+import { useDatabase } from "../../../database/DbContext";
+import { dbItem } from "../../../database/TableClasses";
+import DisplayItem from "../components/displayItem";
+import AddButton from "../../../components/buttons/addbutton";
+import Background from "../../../components/background/background";
 
-export default function Screen() {
+export default function Screen(props: any) {
+  const navigator = props.navigation;
+  const category = props.route.params.category;
+
   const db = useDatabase();
   const [data, setData] = useState<dbItem[] | null>(null);
   const [rerender, setRerender] = useState(false);
@@ -25,9 +30,7 @@ export default function Screen() {
 
   const fetchData = async () => {
     try {
-      const furnitureList = await db.ItemManager.getItemsFromCategory(
-        "Furniture"
-      );
+      const furnitureList = await db.ItemManager.getItemsFromCategory(category);
       setData(furnitureList);
       console.log("update");
     } catch (error) {
@@ -36,22 +39,11 @@ export default function Screen() {
     }
   };
 
-  const createItem = async () => {
+  const deleteItem = async (item: dbItem) => {
     try {
-      const newItem = new dbItem();
-      newItem.Category.value = "Furniture";
-      newItem.Name.value = "A new name for my item";
-      await db?.ItemManager.createItem(newItem);
-      TriggerRerender();
-    } catch (error) {
-      // Handle any errors here
-      console.error(error);
-    }
-  };
-
-  const deleteItem = async (id: number) => {
-    try {
-      await db?.ItemManager.deleteItemFromId(id);
+      await db?.ItemManager.deleteItemFromId(item.ID.value);
+      await db?.MeasurementManager.deleteMeasurementsByItemId(item.ID.value);
+      await db?.ImageManager.deleteImageById(item.Image_ID.value);
       TriggerRerender();
     } catch (error) {
       // Handle any errors here
@@ -73,8 +65,12 @@ export default function Screen() {
         renderItem={({ item }) => (
           <DisplayItem
             item={item}
+            isLonely={data.length == 1 ? true : false}
             onDeletePress={async () => {
-              deleteItem(item.ID.value);
+              deleteItem(item);
+            }}
+            onSelectPress={() => {
+              navigator.navigate("Measurements", { parentItem: item });
             }}></DisplayItem>
         )}
         keyExtractor={(item) => {
@@ -82,9 +78,14 @@ export default function Screen() {
         }}
         horizontal={false}
         numColumns={2}></FlatList>
-      <TouchableOpacity style={styles.addContainer} onPress={createItem}>
+      <TouchableOpacity
+        style={styles.addContainer}
+        onPress={() => {
+          navigator.navigate("AddItem", { category: category });
+        }}>
         <AddButton></AddButton>
       </TouchableOpacity>
+      <Background></Background>
     </View>
   );
 }
@@ -96,7 +97,6 @@ const styles = StyleSheet.create({
     height: "100%",
     flex: 1,
     paddingTop: 20,
-    paddingVertical: 20,
     justifyContent: "center",
     alignItems: "center",
   },

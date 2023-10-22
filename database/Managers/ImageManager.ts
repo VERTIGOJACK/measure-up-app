@@ -82,7 +82,7 @@ export class ImageManager {
     });
   }
   ////////////////delete
-  async deleteItemFromId(id: number) {
+  async deleteImageById(id: number) {
     return new Promise<void>((resolve, reject) => {
       const image = new dbImage();
       this.db.transaction(

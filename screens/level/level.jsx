@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef, SyntheticEvent } from "react";
-import { Button, StyleSheet, View, Animated } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  View,
+  Animated,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import { Accelerometer } from "expo-sensors";
 import Bubble from "./components/bubble.jsx";
 import Background from "../../components/background/background.jsx";
@@ -60,12 +67,12 @@ export default function Screen() {
 
     position.x =
       centerOfView.x +
-      (accelerometer.x - zeroPoint.x) * (centerOfView.x - halfBallsize);
+      (accelerometer.x - zeroPoint.x) * 4 * (centerOfView.x - halfBallsize);
 
     position.y =
       centerOfView.y +
       //invert sensor y to mimic bubble behavior
-      (-accelerometer.y + zeroPoint.y) * (centerOfView.y - halfBallsize);
+      (-accelerometer.y + zeroPoint.y) * 4 * (centerOfView.y - halfBallsize);
 
     //pythagoras
     const distance = Math.sqrt(
@@ -79,9 +86,10 @@ export default function Screen() {
     //     position.y - centerOfView.y
     //   }`
     // );
+    const maxDistance = centerOfView.x - halfBallsize;
 
-    if (distance > centerOfView.x) {
-      const scalingFactor = centerOfView.x / distance;
+    if (distance > maxDistance) {
+      const scalingFactor = maxDistance / distance;
       // Calculate the new position that respects the allowed distance
       const newX =
         centerOfView.x + (position.x - centerOfView.x) * scalingFactor;
@@ -96,7 +104,10 @@ export default function Screen() {
     //By applying this logic, the ball will always stay within the allowed distance (x)
     //from the center while having free movement within the grid.
     //If the ball exceeds this distance, it will be repositioned to maintain the desired constraint.
-
+    if (isNaN(position.x) || isNaN(position.y)) {
+      position.x = 0;
+      position.y = 0;
+    }
     setPosition(position);
     smooth(position);
   }, [accelerometer]);
@@ -153,8 +164,12 @@ export default function Screen() {
         </View>
       </View>
       <View style={styles.buttonsContainer}>
-        <Button title="Set Zero Point" onPress={handleZeroPoint}></Button>
-        <Button title="Clear " onPress={handleClear}></Button>
+        <TouchableOpacity onPress={handleZeroPoint} style={styles.button}>
+          <Text style={styles.text}>Zero</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleClear} style={styles.button}>
+          <Text style={styles.text}>Reset</Text>
+        </TouchableOpacity>
       </View>
       <Background></Background>
     </View>
@@ -199,7 +214,7 @@ const styles = StyleSheet.create({
     borderWidth: 20,
     aspectRatio: "1/1",
     borderStyle: "solid",
-    borderColor: color.utility.trueWhite,
+    borderColor: color.palette.lightGreen,
     borderRadius: 2000,
     elevation: 5,
   },
@@ -216,12 +231,26 @@ const styles = StyleSheet.create({
   },
   circle: {
     position: "absolute",
-    width: 100,
-    height: 100,
-    borderWidth: 10,
+    width: 80,
+    height: 80,
+    borderWidth: 5,
     borderStyle: "solid",
-    borderColor: color.palette.lightBrown,
+    borderColor: color.palette.lightGreen,
     borderRadius: 100,
-    elevation: 5,
+  },
+  button: {
+    backgroundColor: color.utility.trueWhite,
+    height: "100%",
+    width: "40%",
+    borderRadius: 10,
+    elevation: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 40,
+    fontFamily: "Roboto",
+    fontWeight: "bold",
+    color: color.palette.darkGreen,
   },
 });

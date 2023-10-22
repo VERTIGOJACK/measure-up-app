@@ -3,6 +3,7 @@ import migration from "./migration";
 import { dbRoom, dbImage, dbItem, dbMeasurement } from "./TableClasses";
 import { ItemManager } from "./Managers/ItemManager";
 import { ImageManager } from "./Managers/ImageManager";
+import { MeasurementManager } from "./Managers/MeasurementManager";
 
 export class SQLiteService {
   //prop
@@ -10,7 +11,7 @@ export class SQLiteService {
 
   ItemManager: ItemManager;
   RoomManager;
-  MeasurementManager;
+  MeasurementManager: MeasurementManager;
   ImageManager: ImageManager;
 
   private getConnection = () => {
@@ -22,6 +23,7 @@ export class SQLiteService {
     this.db = this.getConnection();
     this.ItemManager = new ItemManager(this.db);
     this.ImageManager = new ImageManager(this.db);
+    this.MeasurementManager = new MeasurementManager(this.db);
   }
 
   applyMigration() {

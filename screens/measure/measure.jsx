@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button, StyleSheet, View, Text, Animated } from "react-native";
 
-import Furniture from "./measurescreens/furniture/furnitureHolder";
-import Other from "./measurescreens/other/other";
+import Furniture from "./screens/furnitureHolder";
+import Other from "./screens/otherHolder";
 import Rooms from "./measurescreens/rooms/rooms";
 
 //change these
