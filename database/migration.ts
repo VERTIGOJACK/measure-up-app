@@ -77,7 +77,7 @@ const migration = (db: SQLite.SQLiteDatabase) => {
         return false;
       }
     );
-    WipeDatabase(tx);
+    // WipeDatabase(tx);
     // DummyData(tx);
   });
 };
