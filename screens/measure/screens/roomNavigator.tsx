@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Rooms from "./room/showrooms";
 import AddItem from "./room/additemtoroom";
 import AddRoom from "./room/addroom";
-import Measurements from "./measurements";
+import Measurements from "./measurements/measurements";
 import Spaces from "./room/showspaces";
 
 const Stack = createNativeStackNavigator();

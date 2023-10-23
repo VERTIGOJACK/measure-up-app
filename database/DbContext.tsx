@@ -1,6 +1,6 @@
 // DatabaseContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { SQLiteService } from "./SQLiteService";
+import { SQLiteService } from "./DatabaseService";
 
 const DatabaseContext = createContext<SQLiteService | null>(null);
 

@@ -14,12 +14,14 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useDatabase } from "../../../../database/DbContext";
 import { dbImage, dbItem, dbRoom } from "../../../../database/TableClasses";
 import Background from "../../../../components/background/background";
-import color from "../../../../styles/color";
+import color from "../../../../styles/color/color";
 import Placeholder from "../../../../assets/placeholder-base64.js";
 import CameraButton from "../../../../components/buttons/camerabutton";
 import DoneButton from "../../../../components/buttons/donebutton";
 import { dbImageToBase64 } from "../../../../helpers/Convert";
 import * as ImagePicker from "expo-image-picker";
+
+import addStyles from "../../../../styles/addStyles";
 
 export default function Screen(props: any) {
   const room: dbRoom = props.route.params.room;
@@ -81,7 +83,10 @@ export default function Screen(props: any) {
         const filetype = cameraImage?.uri.split(".").pop();
         newImage.Filetype.value = filetype != null ? filetype : "";
         //creating image returns newly created id
-        result = await db?.ImageManager.createImage(newImage);
+        const response = await db?.ImageManager.createImage(newImage);
+        if (response) {
+          result = response;
+        }
       }
     } catch (error) {
       // Handle any errors here
@@ -128,54 +133,4 @@ export default function Screen(props: any) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    width: "100%",
-    height: "100%",
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 20,
-
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  innerContainer: {
-    backgroundColor: color.utility.trueWhite,
-    width: "100%",
-    height: "100%",
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    borderRadius: 10,
-  },
-  image: {
-    height: "100%",
-    width: "100%",
-    flex: 6,
-    borderRadius: 10,
-  },
-  cameraView: {
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-    width: "100%",
-    padding: 20,
-  },
-  inputView: {
-    display: "flex",
-    flexDirection: "row",
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-  textInput: {
-    flex: 4,
-    height: "100%",
-    borderWidth: 2,
-    borderColor: color.monochrome.lightGray,
-    borderRadius: 5,
-    fontSize: 30,
-    marginEnd: 10,
-    padding: 10,
-  },
-});
+const styles = addStyles;

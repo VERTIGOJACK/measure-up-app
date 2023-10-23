@@ -14,6 +14,7 @@ import { dbItem, dbRoom } from "../../../../database/TableClasses";
 import DisplayItem from "../../components/displayItem";
 import AddButton from "../../../../components/buttons/addbutton";
 import Background from "../../../../components/background/background";
+import showStyles from "../../../../styles/showStyles";
 
 export default function Screen(props: any) {
   const navigator = props.navigation;
@@ -25,14 +26,14 @@ export default function Screen(props: any) {
 
   const TriggerRerender = () => {
     setRerender(!rerender);
-    console.log(rerender);
   };
 
   const fetchData = async () => {
     try {
-      const itemList = await db.ItemManager.getItemsByRoomId(room.ID.value);
-      setData(itemList);
-      console.log("update");
+      const itemList = await db?.ItemManager.getItemsByRoomId(room.ID.value);
+      if (itemList) {
+        setData(itemList);
+      }
     } catch (error) {
       // Handle any errors here
       console.error(error);
@@ -41,9 +42,7 @@ export default function Screen(props: any) {
 
   const deleteItem = async (item: dbItem) => {
     try {
-      await db?.ItemManager.deleteItemFromId(item.ID.value);
-      await db?.MeasurementManager.deleteMeasurementsByItemId(item.ID.value);
-      await db?.ImageManager.deleteImageById(item.Image_ID.value);
+      await db?.ItemManager.deleteItem(item);
       TriggerRerender();
     } catch (error) {
       // Handle any errors here
@@ -66,7 +65,7 @@ export default function Screen(props: any) {
         renderItem={({ item }) => (
           <DisplayItem
             item={item}
-            isLonely={data.length == 1 ? true : false}
+            isLonely={data && data.length == 1 ? true : false}
             onDeletePress={async () => {
               deleteItem(item);
             }}
@@ -91,21 +90,4 @@ export default function Screen(props: any) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    width: "100%",
-    height: "100%",
-    flex: 1,
-    paddingTop: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addContainer: {
-    position: "absolute",
-    bottom: 0,
-    height: 80,
-    padding: 10,
-    width: "auto",
-  },
-});
+const styles = showStyles;

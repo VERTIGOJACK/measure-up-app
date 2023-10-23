@@ -1,6 +1,8 @@
 import * as SQLite from "expo-sqlite";
 
 import { dbRoom, dbImage, dbItem, dbMeasurement } from "../TableClasses";
+import { ImageManager } from "./ImageManager";
+import { ItemManager } from "./ItemManager";
 
 export class RoomManager {
   //prop
@@ -125,22 +127,22 @@ export class RoomManager {
     });
   }
   ////////////////delete
-  async deleteRoomById(roomId: number) {
-    return new Promise<void>((resolve, reject) => {
-      const room = new dbRoom();
+  async deleteRoom(room: dbRoom) {
+    return new Promise<void>(async (resolve, reject) => {
       this.db.transaction(
         async (tx) => {
           try {
-            const result = await new Promise<void>((resolveTx, rejectTx) => {
+            // Delete the room from the database
+            await new Promise<void>((resolveTx, rejectTx) => {
               tx.executeSql(
                 `DELETE FROM ${room.table} WHERE ${room.ID.key} = ?`,
-                [roomId],
+                [room.ID.value],
                 () => {
                   resolveTx();
                 },
                 (error) => {
                   console.error(
-                    `Error deleting id ${roomId} from ${room.table}: `,
+                    `Error deleting id ${room.ID.value} from ${room.table}: `,
                     error
                   );
                   rejectTx(error);
@@ -149,9 +151,24 @@ export class RoomManager {
               );
             });
 
-            // The 'result' here is not used, but it ensures the inner Promise completes.
-            // You can use it if needed, but it's not required for the query results.
-            resolve();
+            // Create instances of ImageManager and ItemManager
+            const imageManager = new ImageManager(this.db);
+            const itemManager = new ItemManager(this.db);
+
+            // Delete the associated image
+            await imageManager.deleteImageById(room.Image_ID.value);
+
+            // Get items associated with the room
+            const items = await itemManager.getItemsByRoomId(room.ID.value);
+
+            // Delete each item in parallel
+            await Promise.all(
+              items.map(async (item) => {
+                await itemManager.deleteItem(item);
+              })
+            );
+
+            resolve(); // Room deletion completed
           } catch (error) {
             reject(error);
           }
@@ -163,6 +180,7 @@ export class RoomManager {
       );
     });
   }
+
   private nullCheck(number: number) {
     return number == -1 ? "NULL" : number;
   }

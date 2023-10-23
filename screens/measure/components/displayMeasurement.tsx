@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import { dbImage, dbItem, dbMeasurement } from "../../../database/TableClasses";
-import color from "../../../styles/color";
+import color from "../../../styles/color/color";
 import DeleteButton from "../../../components/buttons/deletebutton";
 import Placeholder from "../../../assets/placeholder-base64.js";
 import { dbImageToBase64 } from "../../../helpers/Convert";

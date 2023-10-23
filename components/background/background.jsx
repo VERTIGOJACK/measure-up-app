@@ -1,4 +1,4 @@
-import color from "../../styles/color";
+import color from "../../styles/color/color";
 import { StyleSheet, View } from "react-native";
 
 const bubbleSize = 250;

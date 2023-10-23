@@ -9,11 +9,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { useDatabase } from "../../../database/DbContext";
-import { dbItem, dbMeasurement } from "../../../database/TableClasses";
-import DisplayMeasurement from "../components/displayMeasurement";
-import AddButton from "../../../components/buttons/addbutton";
-import Background from "../../../components/background/background";
+import { useDatabase } from "../../../../database/DbContext";
+import { dbItem, dbMeasurement } from "../../../../database/TableClasses";
+import DisplayMeasurement from "../../components/displayMeasurement";
+import AddButton from "../../../../components/buttons/addbutton";
+import Background from "../../../../components/background/background";
 
 export default function Screen(props: any) {
   const item: dbItem = props.route.params.parentItem;
@@ -25,15 +25,15 @@ export default function Screen(props: any) {
 
   const TriggerRerender = () => {
     setRerender(!rerender);
-    console.log(rerender);
   };
 
   const fetchData = async () => {
     try {
       const measurementList =
         await db?.MeasurementManager.getMeasurementsByItemId(item.ID.value);
-      setData(measurementList);
-      console.log("update");
+      if (measurementList) {
+        setData(measurementList);
+      }
     } catch (error) {
       // Handle any errors here
       console.error(error);
@@ -42,7 +42,6 @@ export default function Screen(props: any) {
 
   const createMeasurement = async () => {
     try {
-      console.log(item);
       const newMeasurement = new dbMeasurement();
       newMeasurement.Item_ID.value = item.ID.value;
       await db?.MeasurementManager.createMeasurement(newMeasurement);

@@ -3,9 +3,9 @@ import { Button, StyleSheet, View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Furniture from "./showcategory";
-import AddItem from "./additemtocategory";
-import Measurements from "./measurements";
+import Other from "./category/showcategory";
+import AddItem from "./category/additemtocategory";
+import Measurements from "./measurements/measurements";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,12 +14,10 @@ export default function Navigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Furniture"
-        component={Furniture}
-        options={{
-          headerShown: false,
-        }}
-        initialParams={{ category: "Furniture" }}
+        name="Other"
+        component={Other}
+        options={{ headerShown: false }}
+        initialParams={{ category: "Other" }}
       />
       <Stack.Screen name="AddItem" component={AddItem} />
       <Stack.Screen name="Measurements" component={Measurements} />

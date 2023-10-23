@@ -1,6 +1,8 @@
 import * as SQLite from "expo-sqlite";
 
 import { dbRoom, dbImage, dbItem, dbMeasurement } from "../TableClasses";
+import { MeasurementManager } from "./MeasurementManager";
+import { ImageManager } from "./ImageManager";
 
 export class ItemManager {
   //prop
@@ -174,30 +176,38 @@ export class ItemManager {
     });
   }
   ////////////////delete
-  async deleteItemFromId(itemId: number) {
-    return new Promise<void>((resolve, reject) => {
-      const item = new dbItem();
+  async deleteItem(item: dbItem) {
+    return new Promise<void>(async (resolve, reject) => {
       this.db.transaction(
         async (tx) => {
           try {
-            const result = await new Promise<void>((resolveTx, rejectTx) => {
+            // Delete the item from the database
+            await new Promise<void>((resolveTx, rejectTx) => {
               tx.executeSql(
                 `DELETE FROM ${item.table} WHERE ${item.ID.key} = ?`,
-                [itemId],
+                [item.ID.value],
                 () => {
                   resolveTx();
                 },
                 (error) => {
-                  console.error(`Error querying ${item.ID.key}: `, error);
+                  console.error(`Error deleting ${item.ID.key}: `, error);
                   rejectTx(error);
                   return false;
                 }
               );
             });
 
-            // The 'result' here is not used, but it ensures the inner Promise completes.
-            // You can use it if needed, but it's not required for the query results.
-            resolve();
+            // Create instances of MeasurementManager and ImageManager
+            const measurementManager = new MeasurementManager(this.db);
+            const imageManager = new ImageManager(this.db);
+
+            // Delete measurements associated with the item
+            await measurementManager.deleteMeasurementsByItemId(item.ID.value);
+
+            // Delete the associated image
+            await imageManager.deleteImageById(item.Image_ID.value);
+
+            resolve(); // Item deletion completed
           } catch (error) {
             reject(error);
           }
@@ -209,6 +219,7 @@ export class ItemManager {
       );
     });
   }
+
   private nullCheck(number: number) {
     return number == -1 ? "NULL" : number;
   }

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Button, StyleSheet, View, Text, Animated } from "react-native";
 
-import Furniture from "./screens/furnitureHolder";
-import Other from "./screens/otherHolder";
-import Rooms from "./screens/roomHolder";
+import Furniture from "./screens/furnitureNavigator";
+import Other from "./screens/otherNavigator";
+import Rooms from "./screens/roomNavigator";
 
 //change these
 import FurnitureSVG from "../../assets/tab-icons/Furniture";
 import RoomsSVG from "../../assets/tab-icons/Rooms";
 import OtherSVG from "../../assets/tab-icons/Other";
 
-import color from "../../styles/color";
+import color from "../../styles/color/color";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 

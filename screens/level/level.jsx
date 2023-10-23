@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef, SyntheticEvent } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-  Button,
   StyleSheet,
   View,
   Animated,
@@ -10,7 +9,7 @@ import {
 import { Accelerometer } from "expo-sensors";
 import Bubble from "./components/bubble.jsx";
 import Background from "../../components/background/background.jsx";
-import color from "../../styles/color.js";
+import color from "../../styles/color/color.js";
 // import { LinearGradient } from "expo-linear-gradient";
 
 //ball dimensions for calc

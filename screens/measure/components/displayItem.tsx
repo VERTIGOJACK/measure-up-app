@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { Image } from "expo-image";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { dbImage, dbItem } from "../../../database/TableClasses";
-import color from "../../../styles/color";
+import color from "../../../styles/color/color";
 import DeleteButton from "../../../components/buttons/deletebutton";
 import Placeholder from "../../../assets/placeholder-base64.js";
 import { dbImageToBase64 } from "../../../helpers/Convert";

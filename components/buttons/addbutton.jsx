@@ -1,7 +1,7 @@
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
 import SVG from "../../assets/buttons/Add";
-import color from "../../styles/color";
+import color from "../../styles/color/color";
 
 function Button() {
   return (

@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import color from "../../../styles/color";
+import color from "../../../styles/color/color";
 
 export default function Bubble() {
   return <View style={styles.bubble}></View>;

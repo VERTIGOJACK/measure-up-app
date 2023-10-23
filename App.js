@@ -13,12 +13,12 @@ import RulerSVG from "./assets/tab-icons/Ruler";
 import LevelSVG from "./assets/tab-icons/Level";
 import HomeSVG from "./assets/tab-icons/Home";
 
-import color from "./styles/color";
+import color from "./styles/color/color";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { SQLiteService } from "./database/SQLiteService";
+import { SQLiteService } from "./database/DatabaseService";
 import { useDatabase, DatabaseProvider } from "./database/DbContext";
 
 export default function App() {
