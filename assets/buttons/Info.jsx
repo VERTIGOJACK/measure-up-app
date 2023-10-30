@@ -6,12 +6,12 @@ function SvgComponent(props) {
     <Svg
       width="100%"
       height="100%"
-      viewBox="0 0 45 45"
+      viewBox={`0 0 60 60`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}>
       <Path
-        d="M22.5 0C10.08 0 0 10.08 0 22.5S10.08 45 22.5 45 45 34.92 45 22.5 34.92 0 22.5 0zm11.25 24.75h-9v9h-4.5v-9h-9v-4.5h9v-9h4.5v9h9v4.5z"
+        d="M30 0C13.44 0 0 13.44 0 30c0 16.56 13.44 30 30 30 16.56 0 30-13.44 30-30C60 13.44 46.56 0 30 0zm3 45h-6V27h6v18zm0-24h-6v-6h6v6z"
         fill={props.color}
       />
     </Svg>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
-import SVG from "../../assets/buttons/Add";
+import SVG from "../../assets/buttons/Info";
 import color from "../../styles/color/color";
 
 function Button() {
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
     aspectRatio: "1/1",
     height: "100%",
     width: "100%",
-    padding: 5,
     elevation: 10,
+    padding: 5,
     backgroundColor: color.utility.trueWhite,
     borderRadius: 2000,
   },

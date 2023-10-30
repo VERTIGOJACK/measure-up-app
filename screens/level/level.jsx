@@ -79,12 +79,6 @@ export default function Screen() {
         Math.pow(centerOfView.y - position.y, 2)
     );
 
-    // console.log(`ball position: X ${position.x} Y ${position.y}`);
-    // console.log(
-    //   `ball diff from middle: X ${position.x - centerOfView.x} Y ${
-    //     position.y - centerOfView.y
-    //   }`
-    // );
     const maxDistance = centerOfView.x - halfBallsize;
 
     if (distance > maxDistance) {
@@ -130,7 +124,9 @@ export default function Screen() {
   const [subscription, setSubscription] = useState(null);
 
   //for smoothed positional updates
-  const animatedValue = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const animatedValue = useRef(
+    new Animated.ValueXY({ x: 185, y: 185 })
+  ).current;
 
   const smooth = (newPosition) => {
     Animated.timing(animatedValue, {

@@ -6,10 +6,9 @@ import color from "../../styles/color/color";
 function Button() {
   return (
     <View style={styles.outer}>
-      <SVG
-        color={color.utility.dangerRed}
-        size={"100%"}
-        style={styles.svg}></SVG>
+      <View style={styles.svg}>
+        <SVG color={color.utility.dangerRed}></SVG>
+      </View>
     </View>
   );
 }
@@ -27,7 +26,6 @@ const styles = StyleSheet.create({
     borderRadius: 2000,
   },
   svg: {
-    aspectRatio: "1/1",
     height: "100%",
     width: "100%",
   },
