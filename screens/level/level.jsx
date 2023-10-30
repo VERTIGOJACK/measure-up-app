@@ -39,7 +39,7 @@ export default function Screen() {
 
   useEffect(() => {
     _subscribe();
-    Accelerometer.setUpdateInterval(100);
+    Accelerometer.setUpdateInterval(10);
     return () => _unsubscribe();
   }, []);
 
@@ -131,7 +131,7 @@ export default function Screen() {
   const smooth = (newPosition) => {
     Animated.timing(animatedValue, {
       toValue: { x: newPosition.x, y: newPosition.y },
-      duration: 100,
+      duration: 20,
       useNativeDriver: false,
     }).start();
   };
