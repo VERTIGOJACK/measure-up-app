@@ -131,7 +131,7 @@ export default function Screen() {
   const smooth = (newPosition) => {
     Animated.timing(animatedValue, {
       toValue: { x: newPosition.x, y: newPosition.y },
-      duration: 150,
+      duration: 100,
       useNativeDriver: false,
     }).start();
   };
