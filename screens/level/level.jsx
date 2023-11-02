@@ -39,7 +39,7 @@ export default function Screen() {
 
   useEffect(() => {
     _subscribe();
-    Accelerometer.setUpdateInterval(10);
+    Accelerometer.setUpdateInterval(100);
     return () => _unsubscribe();
   }, []);
 
@@ -124,14 +124,12 @@ export default function Screen() {
   const [subscription, setSubscription] = useState(null);
 
   //for smoothed positional updates
-  const animatedValue = useRef(
-    new Animated.ValueXY({ x: 185, y: 185 })
-  ).current;
+  const animatedValue = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
 
   const smooth = (newPosition) => {
     Animated.timing(animatedValue, {
       toValue: { x: newPosition.x, y: newPosition.y },
-      duration: 20,
+      duration: 150,
       useNativeDriver: false,
     }).start();
   };
