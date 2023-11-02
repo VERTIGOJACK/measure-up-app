@@ -76,7 +76,7 @@ export default function Screen(props: any) {
       if (cameraImage?.base64 != undefined) {
         //image
         const newImage = new dbImage();
-        //create base64
+        //get base64
         newImage.Data.value = cameraImage?.base64;
         //get filetype
         const filetype = cameraImage?.uri.split(".").pop();
